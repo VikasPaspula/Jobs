@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../api/api";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const token = localStorage.getItem("token");
       try {
-        const response = await axios.get("http://127.0.0.1:8000/api/profile/", {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        });
+        const response = await API.get("/profile/");
         setProfile(response.data);
       } catch (error) {
         console.error("Error fetching profile:", error);

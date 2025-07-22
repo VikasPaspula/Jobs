@@ -1,86 +1,36 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import LogoutButton from '../components/LogoutButton';
 
-const HomePage = () => {
+function Homepage() {
   const navigate = useNavigate();
 
+  const username = localStorage.getItem('username');
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/');
+    }
+  }, [navigate]);
+
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center px-4 py-10">
-      <h1 className="text-3xl font-bold text-center mb-10">Welcome to the Job Portal</h1>
-
-      <p className="text-lg text-gray-700 mb-8 text-center">
-        Find the best jobs that match your resume, explore job listings, and post jobs easily.
-      </p>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-4xl">
-        <button
-          onClick={() => navigate("/upload")}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg"
-        >
-          Upload Resume
-        </button>
-
-        <button
-          onClick={() => navigate("/resumes")}
-          className="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg"
-        >
-          View Resumes
-        </button>
-
-        <button
-          onClick={() => navigate("/post-job")}
-          className="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded-lg"
-        >
-          Post Job
-        </button>
-
-        <button
-          onClick={() => navigate("/jobs")}
-          className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-6 rounded-lg"
-        >
-          View Jobs
-        </button>
-
-        <button
-          onClick={() => navigate("/match-resume")}
-          className="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 px-6 rounded-lg"
-        >
-          Match Resume to All Jobs
-        </button>
-
-        <button
-          onClick={() => navigate("/online-jobs")}
-          className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg"
-        >
-          Online Jobs
-        </button>
-
-        <button
-          onClick={() => navigate("/match-online-jobs")}
-          className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg"
-        >
-          Match Resume to Online Jobs
-        </button>
-
-        <button
-          onClick={() => navigate("/profile")}
-          className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg"
-        >
-          My Profile
-        </button>
-
-        <button
-          onClick={() => {
-            localStorage.removeItem("token");
-            navigate("/");
-          }}
-          className="bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-lg"
-        >
-          Logout
-        </button>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Welcome, {username}!</h1>
+      <p className="mb-4">Explore job and resume matching features.</p>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <a href="/jobs" className="bg-blue-500 text-white p-4 rounded-lg">Job List</a>
+        <a href="/upload" className="bg-green-500 text-white p-4 rounded-lg">Upload Resume</a>
+        <a href="/match" className="bg-purple-500 text-white p-4 rounded-lg">Match Resume to Jobs</a>
+        <a href="/post-job" className="bg-yellow-500 text-white p-4 rounded-lg">Post a Job</a>
+        <a href="/resumes" className="bg-pink-500 text-white p-4 rounded-lg">Resume List</a>
+        <a href="/match-resume" className="bg-indigo-500 text-white p-4 rounded-lg">Match All Resumes</a>
+        <a href="/online-jobs" className="bg-red-500 text-white p-4 rounded-lg">Online Jobs</a>
+        <a href="/match-online-jobs" className="bg-teal-500 text-white p-4 rounded-lg">Match Online Jobs</a>
       </div>
+      <LogoutButton />
     </div>
   );
-};
+}
 
-export default HomePage;
+export default Homepage;

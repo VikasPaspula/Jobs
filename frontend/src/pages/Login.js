@@ -1,53 +1,71 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+function Login() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/home');
+    }
+  }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      const res = await axios.post("http://localhost:8000/api/login/", {
-        username,
-        password,
-      });
-      localStorage.setItem("token", res.data.token);
-      navigate("/home");
-    } catch (err) {
-      alert("Login failed: " + err.response?.data?.detail || "Unknown error");
+
+    const apiBaseUrl = window.location.hostname === 'localhost'
+      ? 'http://localhost:8000'
+      : 'https://jobs-backend-uuqf.onrender.com';
+
+    const response = await fetch(`${apiBaseUrl}/api/login/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('username', data.username);
+      navigate('/home');
+    } else {
+      setError(data.detail || 'Login failed');
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-2xl mb-4">Login</h1>
-      <form className="flex flex-col w-1/4" onSubmit={handleLogin}>
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-4">Login</h2>
+      <form onSubmit={handleLogin}>
         <input
-          className="mb-2 p-2 border"
           type="text"
           placeholder="Username"
+          className="block border p-2 mb-2 w-full"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
         />
         <input
-          className="mb-2 p-2 border"
           type="password"
           placeholder="Password"
+          className="block border p-2 mb-2 w-full"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded">Login</button>
+        <button type="submit" className="bg-blue-500 text-white px-4 py-2">Login</button>
+        {error && <p className="text-red-500 mt-2">Error: {error}</p>}
       </form>
-      <p className="mt-2">
-        New user? <Link className="text-blue-600" to="/register">Register here</Link>
-      </p>
+      <p className="mt-4">Don't have an account? <a href="/register" className="text-blue-600 underline">Register</a></p>
     </div>
   );
-};
+}
 
 export default Login;

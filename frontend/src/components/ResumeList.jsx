@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../api/api";
 
 const ResumeList = () => {
   const [resumes, setResumes] = useState([]);
@@ -7,12 +7,7 @@ const ResumeList = () => {
   useEffect(() => {
     const fetchResumes = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://127.0.0.1:8000/api/resumes/", {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        });
+        const response = await API.get("/resumes/");
         setResumes(response.data);
       } catch (error) {
         console.error("Error fetching resumes:", error);

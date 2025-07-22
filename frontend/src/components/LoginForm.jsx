@@ -22,14 +22,26 @@ function LoginForm() {
     <div className="p-4 max-w-md mx-auto">
       <h2 className="text-2xl font-bold mb-4">Login</h2>
       <form onSubmit={handleSubmit} className="space-y-3">
-        <input type="text" placeholder="Username" value={username}
-          onChange={(e) => setUsername(e.target.value)} required
-          className="w-full p-2 border rounded" />
-        <input type="password" placeholder="Password" value={password}
-          onChange={(e) => setPassword(e.target.value)} required
-          className="w-full p-2 border rounded" />
-        <button type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded w-full">
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+          className="w-full p-2 border rounded"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="w-full p-2 border rounded"
+        />
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-4 py-2 rounded w-full"
+        >
           Login
         </button>
         {error && <p className="text-red-500">{error}</p>}

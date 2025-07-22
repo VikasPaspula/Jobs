@@ -9,8 +9,12 @@ function ResumeMatchAllJobs() {
 
   useEffect(() => {
     const fetchResumes = async () => {
-      const res = await API.get('resumes/');
-      setResumes(res.data);
+      try {
+        const res = await API.get('/api/resumes/');
+        setResumes(res.data);
+      } catch (error) {
+        console.error("Failed to fetch resumes", error);
+      }
     };
     fetchResumes();
   }, []);
@@ -18,9 +22,10 @@ function ResumeMatchAllJobs() {
   const handleMatchAll = async () => {
     try {
       const selected = resumes.find(r => r.id.toString() === resumeId);
-      setSelectedResumeName(selected?.resume_name || `Resume ${resumeId}`);
+      const resumeName = selected?.resume_name || selected?.file_name || `Resume ${resumeId}`;
+      setSelectedResumeName(resumeName);
 
-      const res = await API.get(`resumes/${resumeId}/match_jobs/`);
+      const res = await API.get(`/api/resumes/${resumeId}/match_jobs/`);
       setResults(res.data.results || []);
     } catch (err) {
       console.error("Matching failed", err);
@@ -41,7 +46,7 @@ function ResumeMatchAllJobs() {
           <option value="">-- Choose Resume --</option>
           {resumes.map((r) => (
             <option key={r.id} value={r.id}>
-              {r.resume_name}
+              {r.resume_name || r.file_name || `Resume ${r.id}`}
             </option>
           ))}
         </select>
@@ -61,10 +66,15 @@ function ResumeMatchAllJobs() {
             Matching Jobs for <span className="text-blue-600">{selectedResumeName}</span>
           </h3>
           {results.map((job, index) => (
-            <div key={index} className="border p-2 mb-2 rounded">
-              <h4 className="text-lg font-bold">{job.job_title}</h4>
-              <p>Score: {job.match_score}%</p>
-              <p>Matched Skills: {job.matched_skills.join(', ')}</p>
+            <div key={index} className="border p-3 mb-3 rounded shadow">
+              <h4 className="text-lg font-bold text-blue-800">{job.job_title}</h4>
+              <p className="text-sm">Score: <span className="font-medium">{job.match_score}%</span></p>
+              <p className="text-sm text-green-700">
+                ✅ Matched Skills: {job.matched_skills.join(', ') || 'None'}
+              </p>
+              <p className="text-sm text-red-600">
+                ❌ Missing Keywords: {job.missing_keywords.join(', ') || 'None'}
+              </p>
             </div>
           ))}
         </div>

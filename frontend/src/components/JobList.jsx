@@ -6,7 +6,12 @@ const JobList = () => {
 
   const fetchJobs = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}jobs/`);
+      const apiBaseUrl =
+        window.location.hostname === 'localhost'
+          ? 'http://127.0.0.1:8000/api/'
+          : 'https://jobs-backend-uuqf.onrender.com/api/';
+
+      const res = await axios.get(`${apiBaseUrl}jobs/`);
       setJobs(res.data);
     } catch (error) {
       console.error("Error fetching jobs:", error);

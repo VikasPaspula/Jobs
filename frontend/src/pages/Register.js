@@ -1,4 +1,3 @@
-// src/pages/Register.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,7 +11,11 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    const response = await fetch('http://127.0.0.1:8000/api/register/', {
+    const apiBaseUrl = window.location.hostname === 'localhost'
+      ? 'http://localhost:8000'
+      : 'https://jobs-backend-uuqf.onrender.com';
+
+    const response = await fetch(`${apiBaseUrl}/api/register/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -24,9 +27,10 @@ function Register() {
 
     if (response.ok) {
       localStorage.setItem('token', data.token);
-      navigate('/');
+      localStorage.setItem('username', data.username);
+      navigate('/home');
     } else {
-      setError(JSON.stringify(data)); // Show detailed error
+      setError(JSON.stringify(data));
     }
   };
 

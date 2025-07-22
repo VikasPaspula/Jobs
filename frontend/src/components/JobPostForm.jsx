@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+const apiBaseUrl =
+  process.env.REACT_APP_API_URL?.endsWith('/')
+    ? process.env.REACT_APP_API_URL
+    : `${process.env.REACT_APP_API_URL}/`;
+
 const JobPostForm = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -18,7 +23,7 @@ const JobPostForm = () => {
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}jobs/`,
+        `${apiBaseUrl}api/jobs/`,
         {
           title,
           description,

@@ -1,4 +1,6 @@
 from pathlib import Path
+import os
+import dj_database_url
 
 # Base Directory
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,7 +33,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', 
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -62,21 +64,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'jobportal.wsgi.application'
 
 # Database
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-import dj_database_url
-
 DATABASES = {
     'default': dj_database_url.parse(
-       'postgresql://postgres.iaaafkvrximjnuxtxvtl:vikas123@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres'
+        'postgresql://postgres.iaaafkvrximjnuxtxvtl:vikas123@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres'
     )
 }
-# Password validators
+
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -92,7 +86,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# REST Framework (Session-based auth)
+# REST Framework Configuration
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
@@ -103,25 +97,21 @@ REST_FRAMEWORK = {
     ],
 }
 
-# CORS settings
+# CORS Configuration
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # React Frontend
+    "http://localhost:3000",
     "https://jobs-frontend-ilgv.onrender.com",
 ]
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
-
-import os
-
+# Static files
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-# Media file settings
+
+# Media files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
