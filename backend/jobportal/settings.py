@@ -69,17 +69,13 @@ WSGI_APPLICATION = 'jobportal.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'job_portal_db',
-        'USER': 'postgres',
-        'PASSWORD': 'vikas',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
+import dj_database_url
 
+DATABASES = {
+    'default': dj_database_url.parse(
+       'postgresql://postgres.iaaafkvrximjnuxtxvtl:vikas123@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres'
+    )
+}
 # Password validators
 AUTH_PASSWORD_VALIDATORS = [
     {
