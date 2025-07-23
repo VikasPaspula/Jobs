@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import API from '../api/api';
+import axios from 'axios';
+
+const apiBaseUrl = window.location.hostname === 'localhost'
+  ? 'http://127.0.0.1:8000/api'
+  : 'https://jobs-backend-uuqf.onrender.com/api';
 
 function ResumeMatchAllJobs() {
   const [resumes, setResumes] = useState([]);
   const [resumeId, setResumeId] = useState('');
   const [results, setResults] = useState([]);
   const [selectedResumeName, setSelectedResumeName] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchResumes = async () => {
       try {
-        const res = await API.get('/api/resumes/');
+        const res = await axios.get(`${apiBaseUrl}/resumes/`);
         setResumes(res.data);
       } catch (error) {
         console.error("Failed to fetch resumes", error);
@@ -20,15 +25,18 @@ function ResumeMatchAllJobs() {
   }, []);
 
   const handleMatchAll = async () => {
+    setLoading(true);
     try {
       const selected = resumes.find(r => r.id.toString() === resumeId);
       const resumeName = selected?.resume_name || selected?.file_name || `Resume ${resumeId}`;
       setSelectedResumeName(resumeName);
 
-      const res = await API.get(`/api/resumes/${resumeId}/match_jobs/`);
+      const res = await axios.get(`${apiBaseUrl}/resumes/${resumeId}/match_jobs/`);
       setResults(res.data.results || []);
     } catch (err) {
       console.error("Matching failed", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,13 +62,13 @@ function ResumeMatchAllJobs() {
         <button
           onClick={handleMatchAll}
           className="ml-4 px-4 py-2 bg-blue-600 text-white rounded"
-          disabled={!resumeId}
+          disabled={!resumeId || loading}
         >
-          Match Jobs
+          {loading ? 'Matching...' : 'Match Jobs'}
         </button>
       </div>
 
-      {results.length > 0 && (
+      {!loading && results.length > 0 && (
         <div>
           <h3 className="font-semibold mb-2">
             Matching Jobs for <span className="text-blue-600">{selectedResumeName}</span>
@@ -70,10 +78,10 @@ function ResumeMatchAllJobs() {
               <h4 className="text-lg font-bold text-blue-800">{job.job_title}</h4>
               <p className="text-sm">Score: <span className="font-medium">{job.match_score}%</span></p>
               <p className="text-sm text-green-700">
-                ✅ Matched Skills: {job.matched_skills.join(', ') || 'None'}
+                ✅ Matched Skills: {job.matched_skills?.join(', ') || 'None'}
               </p>
               <p className="text-sm text-red-600">
-                ❌ Missing Keywords: {job.missing_keywords.join(', ') || 'None'}
+                ❌ Missing Keywords: {job.missing_keywords?.join(', ') || 'None'}
               </p>
             </div>
           ))}

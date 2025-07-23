@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from 'react';
 
-// Dynamic API base URL based on environment
 const apiBaseUrl = window.location.hostname === 'localhost'
-  ? 'http://localhost:8000'
-  : 'https://jobs-backend-uuqf.onrender.com';
+  ? 'http://127.0.0.1:8000/api'
+  : 'https://jobs-backend-uuqf.onrender.com/api';
 
 function OnlineJobs() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const fetchJobs = async () => {
     setLoading(true);
     try {
       const response = await fetch(`${apiBaseUrl}/online-jobs/`);
       const data = await response.json();
-      setJobs(data.results || []);
+      setJobs(data?.results || []);
     } catch (err) {
       console.error("Failed to fetch online jobs:", err);
+      setError("Failed to load jobs.");
     } finally {
       setLoading(false);
     }
@@ -32,6 +33,8 @@ function OnlineJobs() {
 
       {loading ? (
         <p>Loading jobs...</p>
+      ) : error ? (
+        <p className="text-red-600">{error}</p>
       ) : jobs.length === 0 ? (
         <p>No jobs found.</p>
       ) : (

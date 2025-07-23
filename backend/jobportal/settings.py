@@ -63,6 +63,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'jobportal.wsgi.application'
 
+import dj_database_url
 # Database
 DATABASES = {
     'default': dj_database_url.parse(

@@ -1,5 +1,6 @@
+// ResumeUpload.jsx
 import React, { useState } from 'react';
-import API from '../api/api';
+import API from '../api/apiConfig';
 
 function ResumeUpload() {
   const [file, setFile] = useState(null);
@@ -23,7 +24,7 @@ function ResumeUpload() {
       const formData = new FormData();
       formData.append('file', file);
 
-      const res = await API.post('resumes/upload/', formData);
+      const res = await API.post('/resumes/upload/', formData);
       setSkills(res.data.skills);
       setResumeName(file.name);
     } catch (err) {

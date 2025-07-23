@@ -1,10 +1,6 @@
+// JobPostForm.jsx
 import React, { useState } from 'react';
-import axios from 'axios';
-
-const apiBaseUrl =
-  process.env.REACT_APP_API_URL?.endsWith('/')
-    ? process.env.REACT_APP_API_URL
-    : `${process.env.REACT_APP_API_URL}/`;
+import API from '../api/apiConfig';
 
 const JobPostForm = () => {
   const [title, setTitle] = useState('');
@@ -14,27 +10,12 @@ const JobPostForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      alert('You must be logged in to post a job.');
-      return;
-    }
-
     try {
-      const response = await axios.post(
-        `${apiBaseUrl}api/jobs/`,
-        {
-          title,
-          description,
-          skills_required: skillsRequired,
-        },
-        {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        }
-      );
+      const response = await API.post('/jobs/', {
+        title,
+        description,
+        skills_required: skillsRequired,
+      });
 
       alert('Job posted successfully!');
       setTitle('');

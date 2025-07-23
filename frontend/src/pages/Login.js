@@ -1,3 +1,4 @@
+// Login.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,23 +10,19 @@ function Login() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
-      navigate('/home');
-    }
+    if (token) navigate('/home');
   }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     const apiBaseUrl = window.location.hostname === 'localhost'
-      ? 'http://localhost:8000'
+      ? 'http://127.0.0.1:8000'
       : 'https://jobs-backend-uuqf.onrender.com';
 
     const response = await fetch(`${apiBaseUrl}/api/login/`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
     });
 
