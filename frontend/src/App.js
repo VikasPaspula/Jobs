@@ -32,6 +32,7 @@ function App() {
           <Route path="/online-jobs" element={<OnlineJobs />} />
           <Route path="/match-online-jobs" element={<MatchOnlineJobs />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/test" element={<h1>Test Route Working</h1>} />
         </Routes>
       </Router>
     </AuthProvider>
